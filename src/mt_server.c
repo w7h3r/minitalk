@@ -45,7 +45,9 @@ int	main(void)
 	int					pid;
 
 	pid = getpid();
+	ft_putstr("I'm starving for signals!\nOh by the way, my PID is: ");
 	ft_putstr(dtoa(pid));
+	write(1, "\n", 1);
 	siginfo.sa_flags = SA_SIGINFO;
 	sigemptyset(&siginfo.sa_mask);
 	siginfo.sa_sigaction = handle_signal;
