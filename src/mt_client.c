@@ -51,10 +51,17 @@ static void	handle_signal(int signal)
 int	main(int argc, char **argv)
 {
 	struct sigaction	siginfo;
+	int					pid;
 
 	if (argc != 3)
 	{
 		ft_putstr("Invalid pattern!");
+		return (-1);
+	}
+	pid = atod(argv[1]);
+	if (pid < 0)
+	{
+		ft_putstr ("Invalid PID!");
 		return (-1);
 	}
 	siginfo.sa_handler = handle_signal;
@@ -62,5 +69,5 @@ int	main(int argc, char **argv)
 	siginfo.sa_flags = 0;
 	sigaction(SIGUSR1, &siginfo, NULL);
 	sigaction(SIGUSR2, &siginfo, NULL);
-	send_message(atod(argv[1]), argv[2]);
+	send_message(pid, argv[2]);
 }

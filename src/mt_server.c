@@ -14,7 +14,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-static void	handle_message(int signal)
+static char	handle_message(int signal)
 {
 	static char	c = 0;
 	static char	i = 0;
@@ -28,14 +28,18 @@ static void	handle_message(int signal)
 	{
 		write(1, &c, 1);
 		i = 0;
+		return (c);
 	}
+	return (1);
 }
 
 static void	handle_signal(int signal, siginfo_t *si, void *context)
 {
 	(void)context;
-	handle_message(signal);
-	kill(si->si_pid, SIGUSR1);
+	if (handle_message(signal) == '\0')
+		kill(si->si_pid, SIGUSR2);
+	else
+		kill(si->si_pid, SIGUSR1);
 }
 
 int	main(void)
