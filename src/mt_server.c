@@ -11,3 +11,47 @@
 /* ************************************************************************** */
 
 #include "../inc/mt.h"
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+
+void	handle_message(int signal)
+{
+	static char	c = 0;
+	static char	i = 0;
+
+	if (signal == SIGUSR1)
+		c = (c << 1) | 1;
+	else if (signal == SIGUSR2)
+		c = (c << 1);
+	i++;
+	if (i == 8)
+	{
+		write(1, &c, 1);
+		i = 0;
+	}
+}
+
+void	handle_signal(int signal, siginfo_t *si, void *context)
+{
+	(void)context;
+	handle_message(signal);
+	kill(si->si_pid, SIGUSR1);
+}
+
+int	main(void)
+{
+	struct sigaction	siginfo;
+	int					pid;
+
+	pid = getpid();
+	ft_putstr(dtoa(pid));
+	siginfo.sa_flags = SA_SIGINFO;
+	sigemptyset(&siginfo.sa_mask);
+	siginfo.sa_sigaction = handle_signal;
+	sigaction(SIGUSR1, &siginfo, NULL);
+	sigaction(SIGUSR2, &siginfo, NULL);
+	while (1)
+		pause();
+	return (0);
+}

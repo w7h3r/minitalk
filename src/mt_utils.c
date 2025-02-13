@@ -11,12 +11,41 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 void	ft_putstr(char *str)
 {
 	while (*str)
 		write(1, str++, 1);
+}
+
+char	*dtoa(int num)
+{
+	char	*res;
+	int		temp;
+	int		digit;
+
+	digit = 0;
+	temp = num;
+	while (temp > 0)
+	{
+		temp /= 10;
+		digit++;
+	}
+	res = malloc((digit + 1) * sizeof(char));
+	if (!res)
+	{
+		ft_putstr("Malloc Error!: dtoa()");
+		return (NULL);
+	}
+	res[digit] = '\0';
+	while (num > 0)
+	{
+		res[--digit] = (num % 10) + '0';
+		num /= 10;
+	}
+	return (res);
 }
 
 int		atod(char *str)

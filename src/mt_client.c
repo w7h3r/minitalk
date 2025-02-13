@@ -19,14 +19,14 @@ _Bool	g_server_signal = 1;
 
 void	send_message(int pid, char *message)
 {
-	unsigned char	i;
+	char	i;
 
 	i = 7;
 	while (*message)
 	{
 		while (i >= 0)
 		{
-			if ((*message << i) & 1)
+			if ((*message >> i) & 1)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
@@ -36,6 +36,7 @@ void	send_message(int pid, char *message)
 			i--;
 		}
 		message++;
+		i = 7;
 	}
 }
 
@@ -50,7 +51,6 @@ void	handle_signal(int signal)
 int	main(int argc, char **argv)
 {
 	struct sigaction	siginfo;
-	pid_t				server_pid;
 
 	if (argc != 3)
 	{
