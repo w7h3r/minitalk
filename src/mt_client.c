@@ -15,7 +15,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-_Bool	g_server_signal = 1;
+_Bool	g_server_signal = 0;
 
 static void	send_message(int pid, char *message)
 {
